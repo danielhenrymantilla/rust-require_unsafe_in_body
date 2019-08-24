@@ -1,4 +1,5 @@
-_`impl` or `trait` block_ attribute to require `unsafe` in the associated functions' bodies no matter the `unsafe`-ness of their APIs.
+_`impl` or `trait` block_ attribute to require `unsafe` in the associated
+functions' bodies no matter the `unsafe`-ness of their APIs.
 
 # Example
 
@@ -63,6 +64,7 @@ ___
 # How does the macro work? / what does it expand to?
 
 ```rust
+# use ::core::fmt::Display;
 # use ::require_unsafe_in_body::require_unsafe_in_bodies;
 #
 struct Foo;
@@ -70,7 +72,7 @@ struct Foo;
 #[require_unsafe_in_bodies]
 impl Foo {
     unsafe
-    fn foo (&self, x: i32, _: i32)
+    fn foo<T : Display> (&self, x: i32, y: &T)
     {
         // body of foo
     }
@@ -85,23 +87,26 @@ impl Foo {
 expands to:
 
 ```rust
+# use ::core::fmt::Display;
 struct Foo;
 
 impl Foo {
     unsafe
-    fn foo (&self, arg_1: i32, arg_2: i32)
+    fn foo<T : Display> (&self, arg_1: i32, arg_2: &T)
     {
         trait Helper {
-            fn inner (&self, x: i32, _: i32);
+            fn inner<T : Display> (&self, x: i32, y: &T);
         }
+
         impl Helper for Foo {
             #[inline(always)]
-            fn inner (&self, x: i32, _: i32)
+            fn inner<T : Display> (&self, x: i32, y: &T)
             {
                 // body of foo
             }
         }
-        <Self as Helper>::inner(self, arg_1, arg_2)
+
+        <Self as Helper>::inner::<T>(self, arg_1, arg_2)
     }
 
     fn bar (&self)
@@ -113,8 +118,11 @@ impl Foo {
 
   - **`foo()`**
 
-    The `inner` function can be marked non-`unsafe` since it is private; and by not being marked `unsafe`, the `body of foo` no longer has `unsafe` block hygiene.
+    The `inner` function can be marked non-`unsafe` since it is private;
+    and by not being marked `unsafe`,
+    the `body of foo` no longer has `unsafe` block hygiene.
 
   - **`bar()`**
 
-    Since `bar()` is not marked `unsafe`, it already naturally requires `unsafe` in its body, thus not requiring any change.
+    Since `bar()` is not marked `unsafe`, it already naturally requires
+    `unsafe` in its body, thus not requiring any change.

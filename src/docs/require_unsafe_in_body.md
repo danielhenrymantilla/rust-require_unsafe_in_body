@@ -1,4 +1,5 @@
-_Function_ attribute to require `unsafe` in the function's body no matter the `unsafe`-ness of its API.
+_Function_ attribute to require `unsafe` in the function's body no matter the
+`unsafe`-ness of its API.
 
 # Example
 
@@ -41,7 +42,8 @@ fn swap_indices_unchecked<T> (slice: &'_ mut [T], i: usize, j: usize)
 
 # Limitation
 
-This is very likely to fail on methods, given technical limitations regarding `Self` and the generated code.
+This is very likely to fail on methods, given technical limitations regarding
+`Self` and the generated code.
 
 ```rust,compile_fail
 # use ::require_unsafe_in_body::require_unsafe_in_body;
@@ -59,7 +61,8 @@ trait CloneInto : Clone {
 }
 ```
 
-In that case you need to use `#[`[`require_unsafe_in_bodies`]`]` on the enclosing `impl` or `trait` block:
+In that case you need to use `#[`[`require_unsafe_in_bodies`]`]` on the
+enclosing `impl` or `trait` block:
 
 ```rust
 # use ::require_unsafe_in_body::require_unsafe_in_bodies;
@@ -120,8 +123,11 @@ fn bar ()
 
   - **`foo()`**
 
-    The `inner` function can be marked non-`unsafe` since it is private; and by not being marked `unsafe`, the `body of foo` no longer has `unsafe` block hygiene.
+    The `inner` function can be marked non-`unsafe` since it is private;
+    and by not being marked `unsafe`,
+    the `body of foo` no longer has `unsafe` block hygiene.
 
   - **`bar()`**
 
-    Since `bar()` is not marked `unsafe`, it already naturally requires `unsafe` in its body, thus not requiring any change.
+    Since `bar()` is not marked `unsafe`, it already naturally requires
+    `unsafe` in its body, thus not requiring any change.

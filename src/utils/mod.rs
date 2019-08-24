@@ -24,36 +24,36 @@ impl<Left : Parse, Right : Parse> Parse for Either<Left, Right> {
 }
 
 pub(in super)
-fn is_method (fn_item: &'_ FunctionLike<'_>) -> Option<Span>
+fn is_receiver (fn_arg: &'_ FnArg) -> bool
 {
-    let first_arg =
-        fn_item
-            .sig
-            .inputs
-            .iter()
-            .next()
-    ;
-    #[allow(bad_style)]
-    let Self_: Type = parse_quote!( Self );
-    match first_arg {
-        | Some(&FnArg::Receiver(ref receiver)) => {
-            return Some(receiver.self_token.span());
-        },
-        | Some(&FnArg::Typed(PatType {
+    match fn_arg {
+        | &FnArg::Receiver(_) => true,
+        | &FnArg::Typed(PatType {
             ref pat,
-            ref ty,
             ..
-        })) => {
-            if **ty == Self_ {
-                return Some(ty.span());
-            }
-            if let Pat::Ident(ref pat_ident) = **pat {
-                if pat_ident.ident == "self" {
-                    return Some(pat_ident.ident.span());
-                }
+        }) => {
+            match **pat {
+                | Pat::Ident(ref pat_ident)
+                    if pat_ident.ident == "self"
+                => {
+                    true
+                },
+                | _ => {
+                    false
+                },
             }
         },
-        | _ => {},
     }
-    None
+}
+
+pub(in super)
+fn is_method (fn_item: &'_ FunctionLike<'_>) -> bool
+{
+    fn_item
+        .sig
+        .inputs
+        .iter()
+        .next()
+        .map(is_receiver)
+        .unwrap_or(false)
 }

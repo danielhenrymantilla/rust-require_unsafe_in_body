@@ -3,7 +3,7 @@ proc-macro = true
 
 [package]
 name = "require_unsafe_in_body"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["Daniel Henry-Mantilla <daniel.henry.mantilla@gmail.com>"]
 edition = "2018"
 
@@ -21,7 +21,7 @@ categories = ["rust-patterns", ]
 [dependencies]
 proc-macro2 = "1.0.1"
 quote = "1.0.2"
-syn =  { version = "1.0.3", features = ["full", "extra-traits"] }
+syn =  { version = "1.0.5", features = ["full"] }
 
 [features]
 default = []

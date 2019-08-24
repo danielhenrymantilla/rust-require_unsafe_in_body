@@ -50,7 +50,13 @@ macro_rules! unwrap {(
 macro_rules! dbg_parse_quote {(
     $($tt:tt)*
 ) => ({
-    eprintln!("{}", quote!($($tt)*));
+    eprintln!(
+        "[{file}:{line}] {s}",
+        s = stringify!($($tt)*),
+        file = file!(),
+        line = line!(),
+    );
+    eprintln!("  ==> {}", quote!($($tt)*));
     parse_quote!($($tt)*)
 })}
 

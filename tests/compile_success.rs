@@ -11,3 +11,5 @@ extern crate require_unsafe_in_body;
 include! {
     "compile_success/mods.rs"
 }
+
+fn main () {}

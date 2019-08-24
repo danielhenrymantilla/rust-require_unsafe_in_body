@@ -1,0 +1,20 @@
+error: `#[require_unsafe_in_body]` does not support directly decorating a method; you need to decorate the whole `impl` or `trait` block with `#[require_unsafe_in_bodies]`
+  --> $DIR/body_on_method_2.rs:18:5
+   |
+18 |     #[require_unsafe_in_body]
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0046]: not all trait items implemented, missing: `my_read`
+  --> $DIR/body_on_method_2.rs:17:1
+   |
+10 | /     unsafe
+11 | |     fn my_read<U> (self: &'_ Self, p: *const U) -> U
+12 | |     where
+13 | |         U : Copy,
+14 | |     ;
+   | |_____- `my_read` from trait
+...
+17 |   impl<T> MyRead for Foo<T> {
+   |   ^^^^^^^^^^^^^^^^^^^^^^^^^ missing `my_read` in implementation
+
+For more information about this error, try `rustc --explain E0046`.

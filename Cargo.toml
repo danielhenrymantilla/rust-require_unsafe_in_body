@@ -1,0 +1,37 @@
+[lib]
+proc-macro = true
+
+[package]
+name = "require_unsafe_in_body"
+version = "0.1.0"
+authors = ["Daniel Henry-Mantilla <daniel.henry.mantilla@gmail.com>"]
+edition = "2018"
+
+license = "MIT"
+readme = "README.md"
+
+documentation = "https://docs.rs/require_unsafe_in_body"
+# repository = "https://github.com/danielhenrymantilla/rust-require_unsafe_in_body"
+homepage = "https://crates.io/crates/require_unsafe_in_body"
+
+description = "Make `unsafe fn` still require `unsafe` blocks in the function's body"
+keywords = ["unsafe", "body", "fn", "safety", "hygiene"]
+categories = ["rust-patterns", ]
+
+[dependencies]
+proc-macro2 = "1.0.1"
+quote = "1.0.2"
+syn =  { version = "1.0.3", features = ["full", "extra-traits"] }
+
+[features]
+default = []
+
+nightly = []
+unit-tests = []
+
+[dev-dependencies]
+pretty_assertions = "0.6.1"
+trybuild = "1.0.11"
+
+[package.metadata.docs.rs]
+features = ["nightly"]

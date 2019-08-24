@@ -1,0 +1,18 @@
+error: `#[require_unsafe_in_body]` does not support directly decorating a method; you need to decorate the whole `impl` or `trait` block with `#[require_unsafe_in_bodies]`
+  --> $DIR/body_on_method.rs:10:5
+   |
+10 |     #[require_unsafe_in_body]
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `my_read` found for type `Foo<()>` in the current scope
+  --> $DIR/body_on_method.rs:28:22
+   |
+5  | / struct Foo<T> (
+6  | |     ::core::marker::PhantomData<T>,
+7  | | );
+   | |__- method `my_read` not found for this
+...
+28 |           unsafe { foo.my_read(&x) },
+   |                        ^^^^^^^
+
+For more information about this error, try `rustc --explain E0599`.

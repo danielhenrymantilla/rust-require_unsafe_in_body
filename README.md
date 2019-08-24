@@ -140,7 +140,7 @@ For more information about this error, try `rustc --explain E0133`.
 
     ```toml
     [dependencies]
-    require_unsafe_in_body = "0.1.0"
+    require_unsafe_in_body = "0.1.1"
     ```
 
  2. Add this to your `lib.rs` (or `main.rs`):
@@ -155,3 +155,5 @@ For more information about this error, try `rustc --explain E0133`.
       - functions, with the `#[`[`require_unsafe_in_body`]`]` attribute;
 
       - methods, with the `#[`[`require_unsafe_in_bodies`]`]` attribute **applied to the enclosing `impl` or `trait` block**.
+
+[`require_unsafe_in_bodies`]: https://docs.rs/require_unsafe_in_body/0.1.1/require_unsafe_in_body/attr.require_unsafe_in_body.html

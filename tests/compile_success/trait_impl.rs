@@ -1,9 +1,3 @@
-#![cfg(not(feature = "unit-tests"))]
-#![forbid(unused_unsafe)]
-
-#[macro_use]
-extern crate require_unsafe_in_body;
-
 #[derive(Clone, Copy, Default)]
 struct Foo<T> (
     ::core::marker::PhantomData<T>,

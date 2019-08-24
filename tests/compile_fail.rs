@@ -1,9 +1,9 @@
 #![cfg(not(feature = "unit-tests"))]
 
 #[test]
-fn ui ()
+fn compile_fail ()
 {
     ::trybuild::TestCases::new()
-        .compile_fail("tests/ui/*.rs")
+        .compile_fail("tests/compile_fail/*.rs")
     ;
 }

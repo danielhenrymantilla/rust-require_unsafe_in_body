@@ -1,17 +1,11 @@
-#![cfg(not(feature = "unit-tests"))]
-#![forbid(unused_unsafe)]
-
-#[macro_use]
-extern crate require_unsafe_in_body;
-
 #[derive(Clone, Copy, Default)]
 struct Foo<T> (
     ::core::marker::PhantomData<T>,
 );
 
 #[require_unsafe_in_bodies]
-impl<T> Foo<T> {
-    pub
+pub
+trait MyRead {
     unsafe
     fn my_read<U> (self: &'_ Self, p: *const U) -> U
     where
@@ -21,6 +15,13 @@ impl<T> Foo<T> {
             ::core::ptr::read(p)
         }
     }
+
+    fn unused ();
+}
+
+impl<T> MyRead for Foo<T> {
+    fn unused ()
+    {}
 }
 
 #[test]

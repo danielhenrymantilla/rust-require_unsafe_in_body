@@ -7,7 +7,7 @@ default: help
 all: test doc
 
 test:
-	$(CARGO) test --features unit-tests
+	$(CARGO) test --features unit-tests,nightly
 	$(CARGO) test --features nightly
 
 doc:

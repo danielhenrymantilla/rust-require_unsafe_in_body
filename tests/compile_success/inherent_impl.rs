@@ -1,8 +1,3 @@
-#![cfg(not(feature = "unit-tests"))]
-#![forbid(unused_unsafe)]
-
-#[macro_use]
-extern crate require_unsafe_in_body;
 
 #[derive(Clone, Copy, Default)]
 struct Foo<T> (
@@ -10,8 +5,8 @@ struct Foo<T> (
 );
 
 #[require_unsafe_in_bodies]
-pub
-trait MyRead {
+impl<T> Foo<T> {
+    pub
     unsafe
     fn my_read<U> (self: &'_ Self, p: *const U) -> U
     where
@@ -21,13 +16,6 @@ trait MyRead {
             ::core::ptr::read(p)
         }
     }
-
-    fn unused ();
-}
-
-impl<T> MyRead for Foo<T> {
-    fn unused ()
-    {}
 }
 
 #[test]

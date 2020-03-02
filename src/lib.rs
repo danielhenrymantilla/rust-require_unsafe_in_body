@@ -183,7 +183,7 @@ fn edit_function_in_place (
         inner
             .sig
             .asyncness
-            .map(|_| quote!( .await ))
+            .map(|_| { let _await = ::syn::token::Await::default(); quote! { . #_await } })
             .unwrap_or_default()
     ;
     // is this a(n associated) function or a true method?

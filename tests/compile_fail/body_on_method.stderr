@@ -13,6 +13,4 @@ error[E0599]: no method named `my_read` found for type `Foo<()>` in the current 
    | |__- method `my_read` not found for this
 ...
 28 |           unsafe { foo.my_read(&x) },
-   |                        ^^^^^^^
-
-For more information about this error, try `rustc --explain E0599`.
+   |                        ^^^^^^^ method not found in `Foo<()>`

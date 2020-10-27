@@ -64,6 +64,11 @@ fn require_unsafe_in_body (
 {
     let _: parse::Nothing = parse_macro_input!(attrs);
     let mut func: ItemFn = parse_macro_input!(input as ItemFn);
+    if func.sig.unsafety.is_none() {
+        // If the function is not tagged `unsafe`, there is already no `unsafe`
+        // hygiene in the function's body, so there is nothing to do.
+        return func.into_token_stream().into();
+    }
     let wrapped_func_call = func_wrap(
         &mut func.sig,
         ::core::mem::replace(&mut func.block, parse_quote!( {} )),
@@ -79,14 +84,8 @@ fn require_unsafe_in_body (
             ").to_compile_error().into();
         }
     ;
-    // If the function is not tagged `unsafe`, there is already no `unsafe`
-    // hygiene in the function's body, so there is nothing to do.
-    *func.block = if func.sig.unsafety.is_none() {
-        wrapped_func_call.block
-    } else {
-        wrapped_func_call.sig.unsafety = None;
-        parse_quote!({ #wrapped_func_call })
-    };
+    wrapped_func_call.sig.unsafety = None;
+    *func.block = parse_quote!({ #wrapped_func_call });
     func.into_token_stream().into()
 }
 
@@ -111,9 +110,10 @@ fn require_unsafe_in_bodies (
                 "));
             }
         ;
-        // if the function is not tagged `unsafe`, there is already no `unsafe`
-        // hygiene in the function's body, so there is nothing to do.
         func.block = if func.sig.unsafety.is_none() {
+            // if the function is not tagged `unsafe`, there is already no `unsafe`
+            // hygiene in the function's body, so there is nothing to do.
+            func.sig = wrapped_func_call.sig;
             wrapped_func_call.block
         } else {
             wrapped_func_call.sig.unsafety = None;

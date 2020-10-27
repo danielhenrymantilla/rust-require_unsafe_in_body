@@ -1,8 +1,11 @@
-error: `#[require_unsafe_in_body]` does not support directly decorating a method; you need to decorate the whole `impl` or `trait` block with `#[require_unsafe_in_bodies]`
+error: Missing `#[require_unsafe_in_bodies]` on the enscoping `trait` or `impl` block.
+            
   --> $DIR/body_on_method_2.rs:18:5
    |
 18 |     #[require_unsafe_in_body]
    |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in an attribute macro (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error[E0046]: not all trait items implemented, missing: `my_read`
   --> $DIR/body_on_method_2.rs:17:1
@@ -16,5 +19,3 @@ error[E0046]: not all trait items implemented, missing: `my_read`
 ...
 17 |   impl<T> MyRead for Foo<T> {
    |   ^^^^^^^^^^^^^^^^^^^^^^^^^ missing `my_read` in implementation
-
-For more information about this error, try `rustc --explain E0046`.

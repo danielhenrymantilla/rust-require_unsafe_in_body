@@ -66,9 +66,14 @@ gen_tests! {
         unsafe
         fn foo ()
         {
-            #[inline(always)]
-            fn __require_unsafe__inner () {}
-            __require_unsafe__inner()
+            #[allow(nonstandard_style)]
+            struct r#unsafe;
+
+            ({
+                #[inline(always)]
+                fn __unsafe_foo (_: r#unsafe) {}
+                __unsafe_foo
+            })(r#unsafe)
         }
     };
 
@@ -94,42 +99,37 @@ gen_tests! {
             unsafe
             fn foo<U> (
                 self: &'_ Self,
-                __require_unsafe__arg_1: T,
-                __require_unsafe__arg_2: U,
-                __require_unsafe__arg_3: Self::Arg,
+                x: T,
+                y: U,
+                arg: Self::Arg,
             )
             {
-                trait __require_unsafe__trait<T> : Foo<T> {
-                    fn __require_unsafe__inner<U> (
-                        self: &'_ Self,
-                        x: T,
-                        y: U,
-                        arg: Self::Arg,
-                    );
-                }
+                #[allow(nonstandard_style)]
+                struct r#unsafe;
+                ({
+                    trait __FuncWrap<T> : Foo<T> {
+                        #[inline(always)]
+                        fn __unsafe_foo<U> (
+                            self: &'_ Self,
+                            x: T,
+                            y: U,
+                            arg: Self::Arg,
+                            _: r#unsafe
+                        )
+                        {}
+                    }
 
-                impl<T, __Self : ?Sized + Foo<T> >
-                    __require_unsafe__trait<T>
-                    for __Self
-                {
-
-                    #[inline(always)]
-                    fn __require_unsafe__inner<U> (
-                        self: &'_ Self,
-                        x: T,
-                        y: U,
-                        arg: Self::Arg,
-                    )
+                    impl<T, __Self : ?Sized + Foo<T> >
+                        __FuncWrap<T>
+                        for __Self
                     {}
-                }
 
-                <Self as __require_unsafe__trait<T> >
-                    ::__require_unsafe__inner::<U>(
-                        self,
-                        __require_unsafe__arg_1,
-                        __require_unsafe__arg_2,
-                        __require_unsafe__arg_3
-                    )
+                    <Self as __FuncWrap<T> >::__unsafe_foo::<U>
+                })(self,
+                    x,
+                    y,
+                    arg,
+                    r#unsafe)
             }
         }
     };
@@ -153,25 +153,29 @@ gen_tests! {
             type U = i32;
 
             unsafe
-            fn make<K> (__require_unsafe__arg_0: Self::U) -> Self
+            fn make<K> (arg_0: Self::U) -> Self
             {
-                trait __require_unsafe__trait<T : Copy> : Trait {
-                    fn __require_unsafe__inner<K> (_: Self::U) -> Self;
-                }
+                #[allow(nonstandard_style)]
+                struct r#unsafe;
 
-                impl<T : Copy> __require_unsafe__trait<T> for Foo<T> {
-                    #[inline(always)]
-                    fn __require_unsafe__inner<K> (_: Self::U) -> Self
-                    {
-                        unsafe {
-                            ::core::ptr::read(::core::ptr::null::<Self>())
-                        }
+                ({
+                    trait __FuncWrap<T : Copy> : Trait {
+                        fn __unsafe_make<K> (_: Self::U, _: r#unsafe) -> Self;
                     }
 
-                }
-                <Self as __require_unsafe__trait<T> >::
-                __require_unsafe__inner::<K>(
-                    __require_unsafe__arg_0
+                    impl<T : Copy> __FuncWrap<T> for Foo<T> {
+                        #[inline(always)]
+                        fn __unsafe_make<K> (_: Self::U, _: r#unsafe) -> Self
+                        {
+                            unsafe {
+                                ::core::ptr::read(::core::ptr::null::<Self>())
+                            }
+                        }
+
+                    }
+                    <Self as __FuncWrap<T> >::__unsafe_make::<K>
+                })(
+                    arg_0, r#unsafe
                 )
             }
         }
